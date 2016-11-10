@@ -38,14 +38,49 @@ extern zend_module_entry rocksdb_module_entry;
 #include "TSRM.h"
 #endif
 
+#ifndef STORAGE_ROCKSDB_INCLUDE_C_H_
+#include "rocksdb/c.h"
+#endif
+
+#define ROCKSDB_TOLERATE_CORRUPTED_TAIL_RECORDS_RECOVERY 0
+#define ROCKSDB_ABSOLUTE_CONSISTENCY_RECOVERY 1
+#define ROCKSDB_POINT_IN_TIME_RECOVERY 2
+#define ROCKSDB_SKIP_ANY_CORRUPTED_RECORDS_RECOVERY 3
+
+#define ROCKSDB_NO_COMPRESSION 0
+#define ROCKSDB_SNAPPY_COMPRESSION 1
+#define ROCKSDB_ZLIB_COMPRESSION 2
+#define ROCKSDB_BZ2_COMPRESSION 3
+#define ROCKSDB_LZ4_COMPRESSION 4
+#define ROCKSDB_LZ4HC_COMPRESSION 5
+
+#define ROCKSDB_LEVEL_COMPATION 0
+#define ROCKSDB_UNIVERSAL_COMPACTION 1
+#define ROCKSDB_FIFO_COMPACTION 2
+
+/* Structure for RocksDb Database object. */
+typedef struct _php_rocksdb_db_object {
+  int initialised;
+  rocksdb_t *db;
+
+  zend_bool exception;
+  zend_object zo;
+} php_rocksdb_db_object;
+
 /* Register constant for options and errors */
 #define PHP_ROCKSDB_REGISTER_CONSTANT(_name, _value) \
   REGISTER_LONG_CONSTANT(_name,  _value, CONST_CS | CONST_PERSISTENT);
 
+static inline php_rocksdb_db_object *php_rocksdb_db_from_obj(zend_object *obj) {
+  return (php_rocksdb_db_object*)((char*)(obj) - XtOffsetOf(php_rocksdb_db_object, zo));
+}
 
+#define Z_ROCKSDB_DB_P(zv) php_rocksdb_db_from_obj(Z_OBJ_P((zv)))
+
+/* Globals */
 ZEND_BEGIN_MODULE_GLOBALS(rocksdb)
-  char       *create_if_missing;
-	zend_long  max_open_files;
+  zend_bool  create_if_missing;
+  zend_long  max_open_files;
   zend_long  write_buffer_size;
   zend_long  max_write_buffer_number;
   zend_long  target_file_size_base;
