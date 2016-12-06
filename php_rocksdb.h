@@ -42,6 +42,9 @@ extern zend_module_entry rocksdb_module_entry;
 #include "rocksdb/c.h"
 #endif
 
+#include "rocksdb_ce.h"
+#include "rocksdb_fe.h"
+
 #define ROCKSDB_TOLERATE_CORRUPTED_TAIL_RECORDS_RECOVERY 0
 #define ROCKSDB_ABSOLUTE_CONSISTENCY_RECOVERY 1
 #define ROCKSDB_POINT_IN_TIME_RECOVERY 2

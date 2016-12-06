@@ -9,7 +9,6 @@
 #include "php.h"
 
 #include "php_rocksdb.h"
-#include "rocksdb_snapshot.h"
 
 zend_class_entry *rocksdb_snapshot_ce;
 
@@ -20,18 +19,11 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(rocksdb_snapshot_class_release_arginfo, 0, 0, 0)
 ZEND_END_ARG_INFO()
 
-zend_function_entry rocksdb_snapshot_class_methods[] = {
-	PHP_ME(rocksdb, __construct, rocksdb_snapshot_class__construct_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
-	PHP_ME(rocksdb, release, rocksdb_snapshot_class_release_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+const zend_function_entry rocksdb_snapshot_class_methods[] = {
+	PHP_ME(rocksdb_snapshot, __construct, rocksdb_snapshot_class__construct_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+	PHP_ME(rocksdb_snapshot, release, rocksdb_snapshot_class_release_arginfo, ZEND_ACC_PUBLIC)
 	PHP_FE_END
 };
 
-ZEND_MINIT_FUNCTION(rocksdb_snapshot) {
-	zend_class_entry ce;
-
-	INIT_CLASS_ENTRY(ce, "RocksDbSnapshot", rocksdb_snapshot_class_methods);
-
-	rocksdb_snapshot_ce = zend_register_internal_class(&ce);
-
-	return SUCCESS;
-}
+PHP_METHOD(rocksdb_snapshot, __construct) {}
+PHP_METHOD(rocksdb_snapshot, release) {}
