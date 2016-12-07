@@ -59,8 +59,8 @@ static void php_rocksdb_error(php_rocksdb_db_object *db_obj, char *format, ...)
 /* }}} */
 
 PHP_METHOD(rocksdb, __construct) {
-	char *path = NULL;
-	zval *args;
+	zend_string *path;
+	HashTable *args;
 	zval *object = getThis();
 	php_rocksdb_db_object *db_obj;
 
@@ -70,11 +70,12 @@ PHP_METHOD(rocksdb, __construct) {
 
 	db_obj = Z_ROCKSDB_DB_P(object);
 
-	if (db_obj->initialised) {
+	if (db_obj->initialised == 1) {
 		zend_throw_exception(zend_ce_exception, "Already initialised DB Object", 0);
 	}
 
 	rocksdb_options_t *options = rocksdb_options_create();
+	rocksdb_options_set_create_if_missing(options, 1);
 
 	/*
 	rocksdb_options_increase_parallelism(options, ROCKSDB_G(increase_parallelism));
@@ -91,21 +92,19 @@ PHP_METHOD(rocksdb, __construct) {
 	*/
 
 	char *err = NULL;
-	db_obj->db = rocksdb_open(options, path, &err);
+	db_obj->db = rocksdb_open(options, (const char *) path, &err);
 
-	if (err) {
-		rocksdb_options_destroy(options);
+	rocksdb_options_destroy(options);
 
-		zend_throw_exception_ex(zend_ce_exception, 0, "Unable to open database: %s", err);
+	if (err != NULL) {
+		zend_throw_exception(zend_ce_exception, err, 0);
 
-		if (path) {
-			efree(path);
-		}
+		efree(path);
+		efree(args);
+		efree(db_obj);
 
 		return;
 	}
 
 	db_obj->initialised = 1;
-
-	rocksdb_options_destroy(options);
 }

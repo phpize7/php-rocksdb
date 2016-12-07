@@ -21,11 +21,13 @@
 #define ROCKSDB_CE_H
 
 extern zend_class_entry *rocksdb_ce;
+extern zend_class_entry *rocksdb_backup_engine_ce;
 extern zend_class_entry *rocksdb_backup_engine_info_ce;
 extern zend_class_entry *rocksdb_cache_ce;
 extern zend_class_entry *rocksdb_iterator_ce;
 extern zend_class_entry *rocksdb_snapshot_ce;
 extern zend_class_entry *rocksdb_write_batch_ce;
+extern zend_class_entry *rocksdb_compaction_filter_ce;
 
 #endif /* ROCKSDB_CE_H */
 

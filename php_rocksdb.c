@@ -25,6 +25,7 @@
 #include "php.h"
 #include "php_ini.h"
 #include "ext/standard/info.h"
+#include "ext/spl/spl_iterators.h"
 #include "rocksdb/c.h"
 #include "Zend/zend_types.h"
 #include "zend_exceptions.h"
@@ -49,12 +50,21 @@ PHP_INI_END()
  */
 PHP_MINIT_FUNCTION(rocksdb)
 {
-	zend_class_entry ce;
+	zend_class_entry ce, ce_backup_info, ce_compaction_filter, ce_iterator;
+
 	INIT_CLASS_ENTRY(ce, "RocksDb", rocksdb_class_methods);
 	rocksdb_ce = zend_register_internal_class(&ce);
 
-	INIT_CLASS_ENTRY(ce, "RocksDb\\BackupEngineInfo", rocksdb_backup_engine_info_class_methods);
-	rocksdb_backup_engine_info_ce = zend_register_internal_class(&ce);
+	INIT_CLASS_ENTRY(ce_backup_info, ZEND_NS_NAME("RocksDb", "BackupEngineInfo"), rocksdb_backup_engine_info_class_methods);
+	rocksdb_backup_engine_info_ce = zend_register_internal_class(&ce_backup_info);
+
+
+	INIT_CLASS_ENTRY(ce_compaction_filter, ZEND_NS_NAME("RocksDb", "CompactionFilter"), rocksdb_compaction_filter_interface);
+	rocksdb_compaction_filter_ce = zend_register_internal_interface(&ce_compaction_filter);
+
+	INIT_CLASS_ENTRY(ce_iterator, ZEND_NS_NAME("RocksDb", "Iterator"), rocksdb_iterator_class_methods);
+	rocksdb_iterator_ce = zend_register_internal_class(&ce_iterator);
+	zend_class_implements(rocksdb_iterator_ce, 1, spl_ce_SeekableIterator);
 
 	REGISTER_INI_ENTRIES();
 

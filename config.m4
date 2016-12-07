@@ -9,16 +9,21 @@ if test "$PHP_ROCKSDB" != "no"; then
   AC_DEFINE([HAVE_ROCKSDB],1 ,[whether to enable RocksDb support])
   AC_HEADER_STDC
 
+PHP_ADD_LIBRARY("rocksdb",1,ROCKSDB_SHARED_LIBADD)
+PHP_SUBST(ROCKSDB_SHARED_LIBADD)
+
 PHP_NEW_EXTENSION(rocksdb,
     php_rocksdb.c \
     rocksdb.c \
-    rocksdb_backup.c \
+    rocksdb_backup_engine.c \
+    rocksdb_backup_engine_info.c \
     rocksdb_cache.c \
     rocksdb_iterator.c \
     rocksdb_snapshot.c \
-    rocksdb_write_batch.c,
+    rocksdb_write_batch.c \
+    rocksdb_compaction_filter.c,
     $ext_shared,, -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1)
+
   PHP_INSTALL_HEADERS([ext/rocksdb], [php_rocksdb.h])
   PHP_ADD_MAKEFILE_FRAGMENT()
-  PHP_SUBST(ROCKSDB_SHARED_LIBADD)
 fi

@@ -21,21 +21,31 @@
 #define ROCKSDB_FE_H
 
 extern const zend_function_entry rocksdb_class_methods[];
+extern const zend_function_entry rocksdb_backup_engine_class_methods[];
 extern const zend_function_entry rocksdb_backup_engine_info_class_methods[];
 extern const zend_function_entry rocksdb_cache_class_methods[];
 extern const zend_function_entry rocksdb_iterator_class_methods[];
 extern const zend_function_entry rocksdb_snapshot_class_methods[];
 extern const zend_function_entry rocksdb_write_batch_class_methods[];
-
+extern const zend_function_entry rocksdb_compaction_filter_interface[];
 
 // RocksDb class methods
 PHP_METHOD(rocksdb, __construct);
 
-// RocksDbBackupEngineInfo class methods
+// RocksDb\BackupEngine
+PHP_METHOD(rocksdb_backup_engine, __construct);
+PHP_METHOD(rocksdb_backup_engine, purgeOldBackups);
+PHP_METHOD(rocksdb_backup_engine, createNewBackup);
+PHP_METHOD(rocksdb_backup_engine, restoreDbFromLatestBackup);
+PHP_METHOD(rocksdb_backup_engine, getInfoCount);
+PHP_METHOD(rocksdb_backup_engine, getBackupInfo);
+PHP_METHOD(rocksdb_backup_engine, close);
+
+// RocksDb\BackupEngineInfo class methods
 PHP_METHOD(rocksdb_backup_engine_info, __construct);
 PHP_METHOD(rocksdb_backup_engine_info, getCount);
 PHP_METHOD(rocksdb_backup_engine_info, getTimestamp);
-PHP_METHOD(rocksdb_backup_engine_info, getBackuoId);
+PHP_METHOD(rocksdb_backup_engine_info, getBackupId);
 PHP_METHOD(rocksdb_backup_engine_info, getSize);
 PHP_METHOD(rocksdb_backup_engine_info, getNumFiles);
 PHP_METHOD(rocksdb_backup_engine_info, destroy);
@@ -44,24 +54,19 @@ PHP_METHOD(rocksdb_backup_engine_info, destroy);
 PHP_METHOD(rocksdb_cache, __construct);
 PHP_METHOD(rocksdb_cache, destroy);
 
-// RocksDbIterator class methods
-PHP_METHOD(rocksdb_iterator, __construct);
-PHP_METHOD(rocksdb_iterator, valid);
+// RocksDb\Iterator class methods
+PHP_METHOD(rocksdb_iterator, current);
 PHP_METHOD(rocksdb_iterator, key);
-PHP_METHOD(rocksdb_iterator, value);
 PHP_METHOD(rocksdb_iterator, next);
-PHP_METHOD(rocksdb_iterator, prev);
-PHP_METHOD(rocksdb_iterator, seekToFirst);
-PHP_METHOD(rocksdb_iterator, seekToLast);
+PHP_METHOD(rocksdb_iterator, rewind);
+PHP_METHOD(rocksdb_iterator, valid);
 PHP_METHOD(rocksdb_iterator, seek);
-PHP_METHOD(rocksdb_iterator, error);
-PHP_METHOD(rocksdb_iterator, close);
 
-// RocksDbSnapshot class methods
+// RocksDb\Snapshot class methods
 PHP_METHOD(rocksdb_snapshot, __construct);
 PHP_METHOD(rocksdb_snapshot, release);
 
-// rocksdb_write_batch class methods
+// Rocksdb\WriteBatch class methods
 PHP_METHOD(rocksdb_write_batch, __construct);
 PHP_METHOD(rocksdb_write_batch, createFrom);
 PHP_METHOD(rocksdb_write_batch, put);
