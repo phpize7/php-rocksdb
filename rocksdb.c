@@ -32,6 +32,36 @@ ZEND_END_ARG_INFO()
 
 const zend_function_entry rocksdb_class_methods[] = {
 	PHP_ME(rocksdb, __construct, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+	PHP_ME(rocksdb, open, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+	PHP_ME(rocksdb, openReadOnly, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+	PHP_ME(rocksdb, openColumnFamilies, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+	PHP_ME(rocksdb, openForReadOnlyColumnFamilies, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+	PHP_ME(rocksdb, listColumnFamilies, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+	PHP_ME(rocksdb, createColumnFamily, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, dropColumnFamily, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, put, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, putCf, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, delete, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, deleteCf, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, merge, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, mergeCf, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, write, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, get, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, getCf, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, getIterator, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC) // create_iterator
+	PHP_ME(rocksdb, getIteratorCf, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC) // create_iterator_cf
+	PHP_ME(rocksdb, createSnapshot, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, getProperty, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, getPropertyCf, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, getApproximateSizes, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, getApproximateSizesCf, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, flush, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, deleteFile, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, disableFileDeletions, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, enableFileDeletions, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, destroy, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, repair, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
+	PHP_ME(rocksdb, close, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC)
 	PHP_FE_END
 };
 
@@ -108,3 +138,34 @@ PHP_METHOD(rocksdb, __construct) {
 
 	db_obj->initialised = 1;
 }
+
+PHP_METHOD(rocksdb, open) {}
+PHP_METHOD(rocksdb, openReadOnly) {}
+PHP_METHOD(rocksdb, openColumnFamilies) {}
+PHP_METHOD(rocksdb, openForReadOnlyColumnFamilies) {}
+PHP_METHOD(rocksdb, listColumnFamilies) {}
+PHP_METHOD(rocksdb, createColumnFamily) {}
+PHP_METHOD(rocksdb, dropColumnFamily) {}
+PHP_METHOD(rocksdb, put) {}
+PHP_METHOD(rocksdb, putCf) {}
+PHP_METHOD(rocksdb, delete) {}
+PHP_METHOD(rocksdb, deleteCf) {}
+PHP_METHOD(rocksdb, merge) {}
+PHP_METHOD(rocksdb, mergeCf) {}
+PHP_METHOD(rocksdb, write) {}
+PHP_METHOD(rocksdb, get) {}
+PHP_METHOD(rocksdb, getCf) {}
+PHP_METHOD(rocksdb, getIterator) {}
+PHP_METHOD(rocksdb, getIteratorCf) {}
+PHP_METHOD(rocksdb, createSnapshot) {}
+PHP_METHOD(rocksdb, getProperty) {}
+PHP_METHOD(rocksdb, getPropertyCf) {}
+PHP_METHOD(rocksdb, getApproximateSizes) {}
+PHP_METHOD(rocksdb, getApproximateSizesCf) {}
+PHP_METHOD(rocksdb, flush) {}
+PHP_METHOD(rocksdb, deleteFile) {}
+PHP_METHOD(rocksdb, disableFileDeletions) {}
+PHP_METHOD(rocksdb, enableFileDeletions) {}
+PHP_METHOD(rocksdb, destroy) {}
+PHP_METHOD(rocksdb, repair) {}
+PHP_METHOD(rocksdb, close) {}

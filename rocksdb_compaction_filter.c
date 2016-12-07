@@ -23,7 +23,8 @@ ZEND_BEGIN_ARG_INFO_EX(rocksdb_compaction_filter_filter_arginfo, 0, 0, 8)
 	ZEND_ARG_INFO(0, value_changes)
 ZEND_END_ARG_INFO()
 
-const zend_function_entry rocksdb_compaction_filter_interface[] = {
+const zend_function_entry rocksdb_compaction_filter_interface_methods[] = {
 	PHP_ABSTRACT_ME(rocksdb_compaction_filter, filter, rocksdb_compaction_filter_filter_arginfo)
+	PHP_ABSTRACT_ME(rocksdb_compaction_filter, getName, NULL)
 	PHP_FE_END
 };

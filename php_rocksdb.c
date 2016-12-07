@@ -46,29 +46,57 @@ PHP_INI_END()
 /* }}} */
 
 
-/* {{{ PHP_MINIT_FUNCTION
- */
-PHP_MINIT_FUNCTION(rocksdb)
+static void php_rocksdb_register_classes()
 {
-	zend_class_entry ce, ce_backup_info, ce_compaction_filter, ce_iterator;
+	zend_class_entry ce,
+		ce_backup_info,
+		ce_compaction_filter,
+		ce_iterator,
+		ce_comparator,
+		ce_merge_operator,
+		ce_snapshot,
+		ce_rocksdb_write_batch;
 
-	INIT_CLASS_ENTRY(ce, "RocksDb", rocksdb_class_methods);
+	INIT_CLASS_ENTRY(ce, ZEND_NS_NAME("RocksDb", "RocksDb"), rocksdb_class_methods);
 	rocksdb_ce = zend_register_internal_class(&ce);
 
 	INIT_CLASS_ENTRY(ce_backup_info, ZEND_NS_NAME("RocksDb", "BackupEngineInfo"), rocksdb_backup_engine_info_class_methods);
 	rocksdb_backup_engine_info_ce = zend_register_internal_class(&ce_backup_info);
 
+	INIT_CLASS_ENTRY(ce_backup_info, ZEND_NS_NAME("RocksDb", "BackupEngineInfo"), rocksdb_backup_engine_info_class_methods);
+	rocksdb_backup_engine_info_ce = zend_register_internal_class(&ce_backup_info);
 
-	INIT_CLASS_ENTRY(ce_compaction_filter, ZEND_NS_NAME("RocksDb", "CompactionFilter"), rocksdb_compaction_filter_interface);
-	rocksdb_compaction_filter_ce = zend_register_internal_interface(&ce_compaction_filter);
+	INIT_CLASS_ENTRY(ce_snapshot, ZEND_NS_NAME("RocksDb", "Snapshot"), rocksdb_snapshot_class_methods);
+	rocksdb_snapshot_ce = zend_register_internal_class(&ce_snapshot);
 
+	INIT_CLASS_ENTRY(ce_rocksdb_write_batch, ZEND_NS_NAME("RocksDb", "WriteBatch"), rocksdb_write_batch_class_methods);
+	rocksdb_write_batch_ce = zend_register_internal_class(&ce_rocksdb_write_batch);
+
+	// Abstract classes
 	INIT_CLASS_ENTRY(ce_iterator, ZEND_NS_NAME("RocksDb", "Iterator"), rocksdb_iterator_class_methods);
 	rocksdb_iterator_ce = zend_register_internal_class(&ce_iterator);
 	zend_class_implements(rocksdb_iterator_ce, 1, spl_ce_SeekableIterator);
 
+	// Interfaces
+	INIT_CLASS_ENTRY(ce_compaction_filter, ZEND_NS_NAME("RocksDb", "CompactionFilter"), rocksdb_compaction_filter_interface_methods);
+	rocksdb_compaction_filter_ce = zend_register_internal_interface(&ce_compaction_filter);
+
+	INIT_CLASS_ENTRY(ce_comparator, ZEND_NS_NAME("RocksDb", "Comparator"), rocksdb_comparator_interface_methods);
+	rocksdb_comparator_ce = zend_register_internal_interface(&ce_comparator);
+
+	INIT_CLASS_ENTRY(ce_merge_operator, ZEND_NS_NAME("RocksDb", "MergeOperator"), rocksdb_merge_operator_interface_methods);
+	rocksdb_merge_operator_ce = zend_register_internal_interface(&ce_merge_operator);
+}
+
+/* {{{ PHP_MINIT_FUNCTION
+ */
+PHP_MINIT_FUNCTION(rocksdb)
+{
+
+	php_rocksdb_register_classes()
+
 	REGISTER_INI_ENTRIES();
 
-	/* Define compression related constants */
 	PHP_ROCKSDB_REGISTER_CONSTANT("ROCKSDB_NO_COMPRESSION",  ROCKSDB_NO_COMPRESSION);
 	PHP_ROCKSDB_REGISTER_CONSTANT("ROCKSDB_SNAPPY_COMPRESSION",  ROCKSDB_SNAPPY_COMPRESSION);
 	PHP_ROCKSDB_REGISTER_CONSTANT("ROCKSDB_ZLIB_COMPRESSION",  ROCKSDB_ZLIB_COMPRESSION);

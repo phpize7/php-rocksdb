@@ -21,7 +21,9 @@ PHP_NEW_EXTENSION(rocksdb,
     rocksdb_iterator.c \
     rocksdb_snapshot.c \
     rocksdb_write_batch.c \
-    rocksdb_compaction_filter.c,
+    rocksdb_compaction_filter.c \
+    rocksdb_comparator.c \
+    rocksdb_merge_operator.c,
     $ext_shared,, -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1)
 
   PHP_INSTALL_HEADERS([ext/rocksdb], [php_rocksdb.h])

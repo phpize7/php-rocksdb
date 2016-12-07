@@ -74,6 +74,9 @@ typedef struct _php_rocksdb_db_object {
 #define PHP_ROCKSDB_REGISTER_CONSTANT(_name, _value) \
   REGISTER_LONG_CONSTANT(_name,  _value, CONST_CS | CONST_PERSISTENT);
 
+#define REGISTER_CLASS_CONST_STRING(const_name, value) \
+        zend_declare_class_constant_long(date_ce_date, const_name, sizeof(const_name)-1, value, sizeof(value)-1);
+
 static inline php_rocksdb_db_object *php_rocksdb_db_from_obj(zend_object *obj) {
   return (php_rocksdb_db_object*)((char*)(obj) - XtOffsetOf(php_rocksdb_db_object, zo));
 }

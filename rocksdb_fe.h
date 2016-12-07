@@ -27,10 +27,42 @@ extern const zend_function_entry rocksdb_cache_class_methods[];
 extern const zend_function_entry rocksdb_iterator_class_methods[];
 extern const zend_function_entry rocksdb_snapshot_class_methods[];
 extern const zend_function_entry rocksdb_write_batch_class_methods[];
-extern const zend_function_entry rocksdb_compaction_filter_interface[];
+extern const zend_function_entry rocksdb_compaction_filter_interface_methods[];
+extern const zend_function_entry rocksdb_comparator_interface_methods[];
+extern const zend_function_entry rocksdb_merge_operator_interface_methods[];
 
 // RocksDb class methods
 PHP_METHOD(rocksdb, __construct);
+PHP_METHOD(rocksdb, open);
+PHP_METHOD(rocksdb, openReadOnly);
+PHP_METHOD(rocksdb, openColumnFamilies);
+PHP_METHOD(rocksdb, openForReadOnlyColumnFamilies);
+PHP_METHOD(rocksdb, listColumnFamilies);
+PHP_METHOD(rocksdb, createColumnFamily);
+PHP_METHOD(rocksdb, dropColumnFamily);
+PHP_METHOD(rocksdb, put);
+PHP_METHOD(rocksdb, putCf);
+PHP_METHOD(rocksdb, delete);
+PHP_METHOD(rocksdb, deleteCf);
+PHP_METHOD(rocksdb, merge);
+PHP_METHOD(rocksdb, mergeCf);
+PHP_METHOD(rocksdb, write);
+PHP_METHOD(rocksdb, get);
+PHP_METHOD(rocksdb, getCf);
+PHP_METHOD(rocksdb, getIterator);
+PHP_METHOD(rocksdb, getIteratorCf);
+PHP_METHOD(rocksdb, createSnapshot);
+PHP_METHOD(rocksdb, getProperty);
+PHP_METHOD(rocksdb, getPropertyCf);
+PHP_METHOD(rocksdb, getApproximateSizes);
+PHP_METHOD(rocksdb, getApproximateSizesCf);
+PHP_METHOD(rocksdb, flush);
+PHP_METHOD(rocksdb, deleteFile);
+PHP_METHOD(rocksdb, disableFileDeletions);
+PHP_METHOD(rocksdb, enableFileDeletions);
+PHP_METHOD(rocksdb, destroy);
+PHP_METHOD(rocksdb, repair);
+PHP_METHOD(rocksdb, close);
 
 // RocksDb\BackupEngine
 PHP_METHOD(rocksdb_backup_engine, __construct);
