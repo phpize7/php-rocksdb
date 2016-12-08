@@ -22,6 +22,7 @@
 #define PHP_ROCKSDB_H
 
 extern zend_module_entry rocksdb_module_entry;
+
 #define phpext_rocksdb_ptr &rocksdb_module_entry
 
 #define PHP_ROCKSDB_VERSION "0.1.0" /* Replace with version number for your extension */
@@ -70,12 +71,8 @@ typedef struct _php_rocksdb_db_object {
   zend_object zo;
 } php_rocksdb_db_object;
 
-/* Register constant for options and errors */
-#define PHP_ROCKSDB_REGISTER_CONSTANT(_name, _value) \
-  REGISTER_LONG_CONSTANT(_name,  _value, CONST_CS | CONST_PERSISTENT);
-
-#define REGISTER_CLASS_CONST_STRING(const_name, value) \
-        zend_declare_class_constant_long(date_ce_date, const_name, sizeof(const_name)-1, value, sizeof(value)-1);
+#define PHP_ROCKSDB_REGISTER_CLASS_CONSTANT(class_entry, const_name, value) \
+  zend_declare_class_constant_long(class_entry, const_name, sizeof(const_name)-1, (zend_long)value);
 
 static inline php_rocksdb_db_object *php_rocksdb_db_from_obj(zend_object *obj) {
   return (php_rocksdb_db_object*)((char*)(obj) - XtOffsetOf(php_rocksdb_db_object, zo));
@@ -83,7 +80,6 @@ static inline php_rocksdb_db_object *php_rocksdb_db_from_obj(zend_object *obj) {
 
 #define Z_ROCKSDB_DB_P(zv) php_rocksdb_db_from_obj(Z_OBJ_P((zv)))
 
-/* Globals */
 ZEND_BEGIN_MODULE_GLOBALS(rocksdb)
   zend_bool  create_if_missing;
   zend_long  max_open_files;
