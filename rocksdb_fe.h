@@ -74,7 +74,6 @@ PHP_METHOD(rocksdb_backup_engine, getBackupInfo);
 PHP_METHOD(rocksdb_backup_engine, close);
 
 // RocksDb\BackupEngineInfo class methods
-PHP_METHOD(rocksdb_backup_engine_info, __construct);
 PHP_METHOD(rocksdb_backup_engine_info, getCount);
 PHP_METHOD(rocksdb_backup_engine_info, getTimestamp);
 PHP_METHOD(rocksdb_backup_engine_info, getBackupId);

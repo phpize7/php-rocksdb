@@ -12,9 +12,6 @@
 
 zend_class_entry *rocksdb_backup_engine_info_ce;
 
-ZEND_BEGIN_ARG_INFO_EX(rocksdb_backup_engine_info_construct_arginfo, 0, 0, 0)
-ZEND_END_ARG_INFO()
-
 ZEND_BEGIN_ARG_INFO_EX(rocksdb_backup_engine_info_get_count_arginfo, 0, 0, 1)
 	ZEND_ARG_INFO(0, index)
 ZEND_END_ARG_INFO()
@@ -36,7 +33,6 @@ ZEND_BEGIN_ARG_INFO_EX(rocksdb_backup_engine_info_get_num_files_arginfo, 0, 0, 1
 ZEND_END_ARG_INFO()
 
 const zend_function_entry rocksdb_backup_engine_info_class_methods[] = {
-	PHP_ME(rocksdb_backup_engine_info, __construct, rocksdb_backup_engine_info_construct_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
 	PHP_ME(rocksdb_backup_engine_info, getCount, rocksdb_backup_engine_info_get_count_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(rocksdb_backup_engine_info, getTimestamp, rocksdb_backup_engine_info_get_timestamp_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(rocksdb_backup_engine_info, getBackupId, rocksdb_backup_engine_info_get_backup_id_arginfo, ZEND_ACC_PUBLIC)
@@ -46,7 +42,6 @@ const zend_function_entry rocksdb_backup_engine_info_class_methods[] = {
 	PHP_FE_END
 };
 
-PHP_METHOD(rocksdb_backup_engine_info, __construct) {}
 PHP_METHOD(rocksdb_backup_engine_info, getCount) {}
 PHP_METHOD(rocksdb_backup_engine_info, getTimestamp) {}
 PHP_METHOD(rocksdb_backup_engine_info, getBackupId) {}
