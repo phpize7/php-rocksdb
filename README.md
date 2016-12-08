@@ -21,8 +21,8 @@ use RocksDb\BackupEngine;
 
 $rocks = new RocksDb('/tmp/rocksdb', [
 	'set_compaction_filter' => new class extends CompactionFilter {
-    function filter($level, $key, $existingValue, $newValue, $valueChanged) {
-			// do something
+	   	function filter($level, $key, $existingValue, $newValue, $valueChanged) {
+				// do something
 		}
 	}
 ]);
