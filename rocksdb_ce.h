@@ -30,6 +30,7 @@ extern zend_class_entry *rocksdb_write_batch_ce;
 extern zend_class_entry *rocksdb_compaction_filter_ce;
 extern zend_class_entry *rocksdb_comparator_ce;
 extern zend_class_entry *rocksdb_merge_operator_ce;
+extern zend_class_entry *rocksdb_exception_ce;
 
 #endif /* ROCKSDB_CE_H */
 
