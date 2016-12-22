@@ -8,42 +8,20 @@
 
 #include "php.h"
 #include "zend_exceptions.h"
- 
+
 #include "php_rocksdb.h"
 
 zend_class_entry *rocksdb_ce;
 
-ZEND_BEGIN_ARG_INFO_EX(rocksdb_class__construct_arginfo, 0, 0, 2)
-	ZEND_ARG_INFO(0, path)
+ZEND_BEGIN_ARG_INFO_EX(rocksdb_class__construct_arginfo, 0, 0, 9)
+  ZEND_ARG_INFO(0, name)
 	ZEND_ARG_ARRAY_INFO(0, options, 1)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_open_arginfo, 0, 0, 2)
-	ZEND_ARG_INFO(0, name)
-	ZEND_ARG_INFO(0, options)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_open_read_only_arginfo, 0, 0, 3)
-	ZEND_ARG_INFO(0, name)
-	ZEND_ARG_INFO(0, options)
-	ZEND_ARG_INFO(0, error_if_log_file_exist)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_open_column_families_arginfo, 0, 0, 5)
-	ZEND_ARG_INFO(0, name)
-	ZEND_ARG_INFO(0, options)
+	ZEND_ARG_ARRAY_INFO(0, read_options, 1)
+	ZEND_ARG_ARRAY_INFO(0, write_options, 1)
 	ZEND_ARG_INFO(0, num_column_families)
-	ZEND_ARG_INFO(0, column_family_names)
-	ZEND_ARG_INFO(0, column_family_options)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_open_for_read_only_column_families_arginfo, 0, 0, 5)
-	ZEND_ARG_INFO(0, name)
-	ZEND_ARG_INFO(0, options)
-	ZEND_ARG_INFO(0, num_column_families)
-	ZEND_ARG_INFO(0, column_family_names)
-	ZEND_ARG_INFO(0, column_family_options)
-	ZEND_ARG_INFO(0, column_family_handles)
+	ZEND_ARG_ARRAY_INFO(0, column_family_names, 1)
+	ZEND_ARG_ARRAY_INFO(0, column_family_options, 1)
+	ZEND_ARG_ARRAY_INFO(0, column_family_handles, 1)
 	ZEND_ARG_INFO(0, error_if_log_file_exist)
 ZEND_END_ARG_INFO()
 
@@ -155,11 +133,7 @@ ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_repair_arginfo, 0, 0, 1)
 ZEND_END_ARG_INFO()
 
 const zend_function_entry rocksdb_class_methods[] = {
-	PHP_ME(rocksdb, __construct, rocksdb_class__construct_arginfo, ZEND_ACC_PRIVATE | ZEND_ACC_CTOR)
-	PHP_ME(rocksdb, open, rocksdb_class_open_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
-	PHP_ME(rocksdb, openReadOnly, rocksdb_class_open_read_only_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
-	PHP_ME(rocksdb, openColumnFamilies, rocksdb_class_open_column_families_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
-	PHP_ME(rocksdb, openForReadOnlyColumnFamilies, rocksdb_class_open_for_read_only_column_families_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+	PHP_ME(rocksdb, __construct, rocksdb_class__construct_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
 	PHP_ME(rocksdb, listColumnFamilies, rocksdb_class_list_column_families_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
 	PHP_ME(rocksdb, createColumnFamily, rocksdb_class_create_column_family_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(rocksdb, dropColumnFamily, rocksdb_class_drop_column_family_arginfo, ZEND_ACC_PUBLIC)
@@ -213,43 +187,45 @@ static void php_rocksdb_error(php_rocksdb_db_object *db_obj, char *format, ...)
 /* }}} */
 
 PHP_METHOD(rocksdb, __construct) {
-	zend_string *path;
-	HashTable *args;
-	zval *object = getThis();
-	php_rocksdb_db_object *db_obj;
+  zend_string *name;
+  HashTable *args;
+  zval *object = getThis();
+  php_rocksdb_db_object *db_obj;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sa", &path, &args) == FAILURE) {
-		return;
-	}
+  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &name, &args) == FAILURE) {
+    return;
+  }
 
-	db_obj = Z_ROCKSDB_DB_P(object);
+  db_obj = Z_ROCKSDB_DB_P(object);
 
-	if (db_obj->initialised == 1) {
-		zend_throw_exception(zend_ce_exception, "Already initialised DB Object", 0);
-	}
+  if (db_obj->initialised == 1) {
+    zend_throw_exception(zend_ce_exception, "Already initialised DB Object", 0);
+  }
 
-	rocksdb_options_t *options = rocksdb_options_create();
-	rocksdb_options_set_create_if_missing(options, 1);
+  rocksdb_options_t *options = rocksdb_options_create();
+  rocksdb_options_set_create_if_missing(options, 1);
 
-	char *err = NULL;
-	db_obj->db = rocksdb_open(options, (const char *) path, &err);
+  char *err = NULL;
+  db_obj->db = rocksdb_open(options, (const char *) name, &err);
 
-	rocksdb_options_destroy(options);
+  rocksdb_options_destroy(options);
 
-	if (err != NULL) {
-		zend_throw_exception(zend_ce_exception, err, 0);
+  if (err != NULL) {
+    zend_throw_exception(zend_ce_exception, err, 0);
 
-		efree(path);
-		efree(args);
-		efree(db_obj);
+    efree(name);
+    efree(args);
+    efree(db_obj);
 
-		return;
-	}
+    return;
+  }
 
-	db_obj->initialised = 1;
+  db_obj->initialised = 1;
 }
 
-PHP_METHOD(rocksdb, open) {}
+PHP_METHOD(rocksdb, open) {
+
+}
 PHP_METHOD(rocksdb, openReadOnly) {}
 PHP_METHOD(rocksdb, openColumnFamilies) {}
 PHP_METHOD(rocksdb, openForReadOnlyColumnFamilies) {}

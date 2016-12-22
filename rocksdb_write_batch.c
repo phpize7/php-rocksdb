@@ -12,9 +12,6 @@
 
 zend_class_entry *rocksdb_write_batch_ce;
 
-ZEND_BEGIN_ARG_INFO_EX(rocksdb_write_batch_class__construct_arginfo, 0, 0, 0)
-ZEND_END_ARG_INFO()
-
 ZEND_BEGIN_ARG_INFO_EX(rocksdb_write_batch_class_create_from_arginfo, 0, 0, 1)
 	ZEND_ARG_INFO(0, bytes)
 ZEND_END_ARG_INFO()
@@ -71,7 +68,7 @@ ZEND_BEGIN_ARG_INFO_EX(rocksdb_write_batch_class_destroy_arginfo, 0, 0, 0)
 ZEND_END_ARG_INFO()
 
 const zend_function_entry rocksdb_write_batch_class_methods[] = {
-	PHP_ME(rocksdb_write_batch, __construct, rocksdb_write_batch_class__construct_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+	PHP_ME(rocksdb_write_batch, __construct, NULL,  ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
 	PHP_ME(rocksdb_write_batch, createFrom, rocksdb_write_batch_class_create_from_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(rocksdb_write_batch, put, rocksdb_write_batch_class_put_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(rocksdb_write_batch, putCf, rocksdb_write_batch_class_put_cf_arginfo, ZEND_ACC_PUBLIC)

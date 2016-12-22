@@ -33,10 +33,6 @@ extern const zend_function_entry rocksdb_merge_operator_interface_methods[];
 
 // RocksDb class methods
 PHP_METHOD(rocksdb, __construct);
-PHP_METHOD(rocksdb, open);
-PHP_METHOD(rocksdb, openReadOnly);
-PHP_METHOD(rocksdb, openColumnFamilies);
-PHP_METHOD(rocksdb, openForReadOnlyColumnFamilies);
 PHP_METHOD(rocksdb, listColumnFamilies);
 PHP_METHOD(rocksdb, createColumnFamily);
 PHP_METHOD(rocksdb, dropColumnFamily);

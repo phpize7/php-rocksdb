@@ -45,3 +45,90 @@ $rocks = new RocksDb('/tmp/rocksdb', [
 		}
 	}
 ]);
+
+
+use RocksDb\RocksDb;
+
+$rocks = new RocksDb('/tmp/rocks.db', ['create_if_missing' => true]);
+$rocks->put('counter', 0);
+$rocks->get('counter');
+
+
+use RocksDb\RocksDb;
+use RocksDb\WriteBatch;
+
+$rocks = new RocksDb('/tmp/rocks.db', ['create_if_missing' => true]);
+$batch = new WriteBatch();
+
+for ($i = 0; $i < 10; $i++) {
+	$batch->put('user_' . $i, json_encode([]))
+}
+
+$rocks->write($batch);
+
+
+
+
+
+use RocksDb\RocksDb;
+use RocksDb\MergeOperator;
+
+$mergeOperator = new class implements MergeOperator {
+		function fullMerge($key, $existingValue, &$value): boolval {
+			if ($existingValue) {
+				$value = $existingValue + $value;
+			}
+
+			return true;
+		}
+
+		function partialMerge(): bool {
+			return true;
+		}
+
+		function name(): string {
+			return 'AssocCounter';
+		}
+};
+
+$rocks = new RocksDb('/tmp/rocks.db', [
+	'create_if_missing' => true,
+	'merge_operator' => $mergeOperator
+]);
+$rocks->merge('x', 1);
+$rocks->merge('x', 1);
+
+print $rocks->get('x'); // prints 2
+
+
+use RocksDb\RocksDb;
+use RocksDb\BackupEngine;
+
+$rocks = new RocksDb('/tmp/rocks.db', [
+	'create_if_missing' => true
+]);
+$rocks->put('a', 'v1');
+$rocks->put('b', 'v2');
+$rocks->put('c', 'v3');
+
+$backup = new BackupEngine('/tmp/backups');
+$backup->createBackup($rocks, [
+	'flush_before_backup' => true
+]);
+
+$backup->restoreLatestBackup('rocks.db', 'rocks.db');
+
+
+
+
+use RocksDb\WriteBatch;
+
+$batch = new WriteBatch();
+for ($i = 0; $i < 10; $i++) {
+	$batch->put('user_' . $i, json_encode([]))
+}
+$iterator = $batch->getIterator();
+
+foreach ($iterator as $key => $value) {
+	print $key, $value;
+}
