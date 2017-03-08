@@ -33,3 +33,15 @@ tests/*/*.php
 tests/*/*.exp
 tests/*/*.log
 tests/*/*.sh
+php_rocksdb.o
+rocksdb.o
+rocksdb_backup_engine.o
+rocksdb_backup_engine_info.o
+rocksdb_cache.o
+rocksdb_compaction_filter.o
+rocksdb_comparator.o
+rocksdb_exception.o
+rocksdb_iterator.o
+rocksdb_merge_operator.o
+rocksdb_snapshot.o
+rocksdb_write_batch.o

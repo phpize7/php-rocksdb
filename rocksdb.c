@@ -185,16 +185,16 @@ static void php_rocksdb_error(php_rocksdb_db_object *db_obj, char *format, ...)
 
 static inline rocksdb_options_t* php_rocksdb_get_open_options(zval *options_zv)
 {
-	HashTable *ht;
+  HashTable *ht;
   zval *val;
 
-	rocksdb_options_t *options = rocksdb_options_create();
+  rocksdb_options_t *options = rocksdb_options_create();
 
-	if (options_zv == NULL) {
-		return options;
-	}
+  if (options_zv == NULL) {
+  	return options;
+  }
 
-	ht = Z_ARRVAL_P(options_zv);
+  ht = Z_ARRVAL_P(options_zv);
 
   if (NULL != (val = zend_hash_str_find(ht,
       "create_if_missing", sizeof("create_if_missing")-1))) {
@@ -211,21 +211,21 @@ static inline rocksdb_options_t* php_rocksdb_get_open_options(zval *options_zv)
   if (NULL != (val = zend_hash_str_find(ht,
       "write_buffer_size", sizeof("write_buffer_size")-1))) {
     convert_to_long(val);
-		rocksdb_options_set_write_buffer_size(options, Z_LVAL_P(val));
+  	rocksdb_options_set_write_buffer_size(options, Z_LVAL_P(val));
   }
   if (NULL != (val = zend_hash_str_find(ht,
       "max_open_files", sizeof("max_open_files")-1))) {
     convert_to_long(val);
-		rocksdb_options_set_max_open_files(options, Z_LVAL_P(val));
+  	rocksdb_options_set_max_open_files(options, Z_LVAL_P(val));
   }
   if (NULL != (val = zend_hash_str_find(ht,
       "compression", sizeof("compression")-1))) {
     convert_to_long(val);
-		if (Z_LVAL_P(val) != rocksdb_no_compression && Z_LVAL_P(val) != rocksdb_snappy_compression) {
-			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid compression type");
-		} else {
-			rocksdb_options_set_compression(options, Z_LVAL_P(val));
-		}
+  	if (Z_LVAL_P(val) != rocksdb_no_compression && Z_LVAL_P(val) != rocksdb_snappy_compression) {
+  		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Invalid compression type");
+  	} else {
+  		rocksdb_options_set_compression(options, Z_LVAL_P(val));
+  	}
   }
 
 	return options;
@@ -244,7 +244,7 @@ PHP_METHOD(rocksdb, __construct) {
   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|aaz",
   			&name, &name_len, &options_zv, &readoptions_zv, &writeoptions_zv) == FAILURE) {
   		return;
-	}
+  }
 
   db_obj = Z_ROCKSDB_DB_P(object);
 
@@ -284,23 +284,23 @@ PHP_METHOD(rocksdb, dropColumnFamily) {}
 
 PHP_METHOD(rocksdb, put) {
   char *key, *value;
-	size_t key_len, value_len;
+  size_t key_len, value_len;
   zval *object = getThis();
   php_rocksdb_db_object *db_obj;
   db_obj = Z_ROCKSDB_DB_P(object);
-	char *err = NULL;
+  char *err = NULL;
 
-	rocksdb_writeoptions_t *writeoptions = rocksdb_writeoptions_create();
+  rocksdb_writeoptions_t *writeoptions = rocksdb_writeoptions_create();
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss",
-			&key, &key_len, &value, &value_len) == FAILURE) {
-		return;
-	}
+  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss",
+  		&key, &key_len, &value, &value_len) == FAILURE) {
+  	return;
+  }
 
-	rocksdb_put(db_obj->db, writeoptions, key, key_len, value, value_len, &err);
-	rocksdb_writeoptions_destroy(writeoptions);
+  rocksdb_put(db_obj->db, writeoptions, key, key_len, value, value_len, &err);
+  rocksdb_writeoptions_destroy(writeoptions);
 
-	RETURN_TRUE;
+  RETURN_TRUE;
 }
 
 PHP_METHOD(rocksdb, putCf) {}
@@ -356,13 +356,13 @@ PHP_METHOD(rocksdb, write) {
 }
 PHP_METHOD(rocksdb, get) {
   char *key, *value;
-	size_t key_len, value_len;
+  size_t key_len, value_len;
   zval *object = getThis();
   php_rocksdb_db_object *db_obj;
   db_obj = Z_ROCKSDB_DB_P(object);
-	char *err = NULL;
+  char *err = NULL;
 
-	rocksdb_readoptions_t *readoptions = rocksdb_readoptions_create();
+  rocksdb_readoptions_t *readoptions = rocksdb_readoptions_create();
 
   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
       &key, &key_len) == FAILURE) {
