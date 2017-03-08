@@ -1,0 +1,8 @@
+version: '2'
+
+services:
+    ubuntu:
+        image: ubuntu:16.10
+        volumes:
+          - ./src:/var/www/src
+        tty: true
