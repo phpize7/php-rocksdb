@@ -84,16 +84,77 @@ const zend_function_entry rocksdb_write_batch_class_methods[] = {
 	PHP_FE_END
 };
 
-PHP_METHOD(rocksdb_write_batch, __construct) {}
+PHP_METHOD(rocksdb_write_batch, __construct) {
+	php_rocksdb_write_batch_object *this;
+	rocksdb_writebatch_t *batch;
+
+	if (zend_parse_parameters_none() == FAILURE) {
+		return;
+	}
+
+	this = Z_ROCKSDB_WRITE_BATCH_P(getThis() TSRMLS_CC);
+	batch = rocksdb_writebatch_create();
+
+	this->batch = batch;
+}
 PHP_METHOD(rocksdb_write_batch, createFrom) {}
-PHP_METHOD(rocksdb_write_batch, put) {}
+PHP_METHOD(rocksdb_write_batch, put) {
+	char *key, *value;
+	size_t key_len, value_len;
+
+	php_rocksdb_write_batch_object *this;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss",
+			&key, &key_len, &value, &value_len) == FAILURE) {
+		return;
+	}
+
+	this = Z_ROCKSDB_WRITE_BATCH_P(getThis() TSRMLS_CC);
+	rocksdb_writebatch_put(this->batch, key, key_len, value, value_len);
+
+	RETURN_TRUE;
+}
 PHP_METHOD(rocksdb_write_batch, putCf) {}
 PHP_METHOD(rocksdb_write_batch, merge) {}
 PHP_METHOD(rocksdb_write_batch, mergeCf) {}
-PHP_METHOD(rocksdb_write_batch, delete) {}
+PHP_METHOD(rocksdb_write_batch, delete) {
+	char *key;
+	size_t key_len;
+
+	php_rocksdb_write_batch_object *this;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &key, &key_len) == FAILURE) {
+		return;
+	}
+
+	this = Z_ROCKSDB_WRITE_BATCH_P(getThis() TSRMLS_CC);
+	rocksdb_writebatch_delete(this->batch, key, key_len);
+}
 PHP_METHOD(rocksdb_write_batch, deleteCf) {}
 PHP_METHOD(rocksdb_write_batch, data) {}
 PHP_METHOD(rocksdb_write_batch, count) {}
 PHP_METHOD(rocksdb_write_batch, getIterator) {}
-PHP_METHOD(rocksdb_write_batch, clear) {}
-PHP_METHOD(rocksdb_write_batch, destroy) {}
+PHP_METHOD(rocksdb_write_batch, clear) {
+	php_rocksdb_write_batch_object *this;
+
+	if (zend_parse_parameters_none() == FAILURE) {
+		return;
+	}
+
+	this = Z_ROCKSDB_WRITE_BATCH_P(getThis() TSRMLS_CC);
+	rocksdb_writebatch_clear(this->batch);
+
+	RETURN_TRUE;
+}
+PHP_METHOD(rocksdb_write_batch, destroy) {
+	php_rocksdb_write_batch_object *this;
+
+	if (zend_parse_parameters_none() == FAILURE) {
+		return;
+	}
+
+	this = Z_ROCKSDB_WRITE_BATCH_P(getThis() TSRMLS_CC);
+	rocksdb_writebatch_destroy(this->batch);
+
+	RETURN_TRUE;
+}

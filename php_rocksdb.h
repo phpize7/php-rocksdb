@@ -71,14 +71,24 @@ typedef struct _php_rocksdb_db_object {
   zend_object zo;
 } php_rocksdb_db_object;
 
+typedef struct _php_rocksdb_writeb_atch_object {
+	rocksdb_writebatch_t *batch;
+	zend_object zo;
+} php_rocksdb_write_batch_object;
+
 #define PHP_ROCKSDB_REGISTER_CLASS_CONSTANT(class_entry, const_name, value) \
   zend_declare_class_constant_long(class_entry, const_name, sizeof(const_name)-1, (zend_long)value);
 
-static inline php_rocksdb_db_object *php_rocksdb_db_from_obj(zend_object *obj) {
+static inline php_rocksdb_db_object *php_rocksdb_from_obj(zend_object *obj) {
   return (php_rocksdb_db_object*)((char*)(obj) - XtOffsetOf(php_rocksdb_db_object, zo));
 }
 
-#define Z_ROCKSDB_DB_P(zv) php_rocksdb_db_from_obj(Z_OBJ_P((zv)))
+static inline php_rocksdb_write_batch_object *php_rocksdb_write_batch_from_obj(zend_object *obj) {
+	return (php_rocksdb_write_batch_object*)((char*)(obj) - XtOffsetOf(php_rocksdb_write_batch_object, zo));
+}
+
+#define Z_ROCKSDB_DB_P(zv) php_rocksdb_from_obj(Z_OBJ_P((zv)))
+#define Z_ROCKSDB_WRITE_BATCH_P(zv) php_rocksdb_write_batch_from_obj(Z_OBJ_P((zv)))
 
 ZEND_BEGIN_MODULE_GLOBALS(rocksdb)
   zend_bool  create_if_missing;

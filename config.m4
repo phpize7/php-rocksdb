@@ -9,7 +9,7 @@ if test "$PHP_ROCKSDB" != "no"; then
   AC_DEFINE([HAVE_ROCKSDB],1 ,[whether to enable RocksDb support])
   AC_HEADER_STDC
 
-PHP_ADD_LIBRARY("rocksdb",1,ROCKSDB_SHARED_LIBADD)
+PHP_ADD_LIBRARY_WITH_PATH("rocksdb", "/usr/local/lib", ROCKSDB_SHARED_LIBADD)
 PHP_SUBST(ROCKSDB_SHARED_LIBADD)
 
 PHP_NEW_EXTENSION(rocksdb,
