@@ -65,11 +65,11 @@ PHP_METHOD(rocksdb_backup_engine, __construct);
 PHP_METHOD(rocksdb_backup_engine, purgeOldBackups);
 PHP_METHOD(rocksdb_backup_engine, createNewBackup);
 PHP_METHOD(rocksdb_backup_engine, restoreDbFromLatestBackup);
-PHP_METHOD(rocksdb_backup_engine, getInfoCount);
 PHP_METHOD(rocksdb_backup_engine, getBackupInfo);
 PHP_METHOD(rocksdb_backup_engine, close);
 
 // RocksDb\BackupEngineInfo class methods
+PHP_METHOD(rocksdb_backup_engine_info, __construct);
 PHP_METHOD(rocksdb_backup_engine_info, getCount);
 PHP_METHOD(rocksdb_backup_engine_info, getTimestamp);
 PHP_METHOD(rocksdb_backup_engine_info, getBackupId);
@@ -82,6 +82,7 @@ PHP_METHOD(rocksdb_cache, __construct);
 PHP_METHOD(rocksdb_cache, destroy);
 
 // RocksDb\Iterator class methods
+PHP_METHOD(rocksdb_iterator, __construct);
 PHP_METHOD(rocksdb_iterator, current);
 PHP_METHOD(rocksdb_iterator, key);
 PHP_METHOD(rocksdb_iterator, next);
