@@ -3,7 +3,7 @@ Check for rocksdb presence
 --SKIPIF--
 <?php if (!extension_loaded("rocksdb")) print "skip"; ?>
 --FILE--
-<?php 
+<?php
 echo "rocksdb extension is available";
 /*
 	you can add regression tests for your extension here
