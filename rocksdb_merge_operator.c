@@ -15,7 +15,7 @@ zend_class_entry *rocksdb_merge_operator_ce;
 ZEND_BEGIN_ARG_INFO_EX(rocksdb_merge_operator_full_merge_arginfo, 0, 0, 3)
 	ZEND_ARG_INFO(0, key)
 	ZEND_ARG_INFO(0, existing_value)
-	ZEND_ARG_INFO(0, value)
+	ZEND_ARG_INFO(1, value)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(rocksdb_merge_operator_partial_merge_arginfo, 0, 0, 3)

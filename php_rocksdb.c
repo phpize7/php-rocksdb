@@ -33,7 +33,62 @@
 #include "stdbool.h"
 #include "php_rocksdb.h"
 
-ZEND_DECLARE_MODULE_GLOBALS(rocksdb)
+ZEND_DECLARE_MODULE_GLOBALS(rocksdb);
+
+static zend_object_handlers rocksdb_default_handlers;
+static zend_object_handlers rocksdb_iterator_handlers;
+static zend_object_handlers rocksdb_backup_engine_info_handlers;
+
+static zend_object* php_rocksdb_object_new(zend_class_entry *ce)
+{
+  php_rocksdb_db_object *obj;
+
+  obj = emalloc(sizeof(*obj));
+  memset(obj, 0, sizeof(*obj));
+
+  zend_object_std_init(&obj->zo, ce);
+  obj->zo.handlers = &rocksdb_default_handlers;
+
+  return &obj->zo;
+}
+
+static zend_object* php_rocksdb_iterator_object_new(zend_class_entry *ce)
+{
+  php_rocksdb_iterator_object *obj;
+
+  obj = emalloc(sizeof(*obj));
+  memset(obj, 0, sizeof(*obj));
+
+  zend_object_std_init(&obj->zo, ce);
+  obj->zo.handlers = &rocksdb_iterator_handlers;
+
+  return &obj->zo;
+}
+
+static zend_object* php_rocksdb_backup_engine_info_object_new(zend_class_entry *ce)
+{
+  php_rocksdb_backup_engine_info_object *obj;
+
+  obj = emalloc(sizeof(*obj));
+  memset(obj, 0, sizeof(*obj));
+
+  zend_object_std_init(&obj->zo, ce);
+  obj->zo.handlers = &rocksdb_backup_engine_info_handlers;
+
+  return &obj->zo;
+}
+
+
+static void rocksdb_free_storage(zend_object *obj)
+{
+	php_rocksdb_db_object *object = (php_rocksdb_db_object*) obj;
+
+  if (object->db) {
+    rocksdb_close(object->db);
+  }
+  //efree(object->name);
+  efree(object->handles);
+}
 
 static void php_rocksdb_register_classes()
 {
@@ -48,18 +103,36 @@ static void php_rocksdb_register_classes()
 		ce_backup_engine,
 		ce_exception;
 
+	memcpy(&rocksdb_default_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
+  rocksdb_default_handlers.offset = XtOffsetOf(php_rocksdb_db_object, zo);
+	rocksdb_default_handlers.free_obj = rocksdb_free_storage;
 	INIT_CLASS_ENTRY(ce, ZEND_NS_NAME("RocksDb", "RocksDb"), rocksdb_class_methods);
+  ce.create_object = php_rocksdb_object_new;
 	rocksdb_ce = zend_register_internal_class(&ce);
+
 	INIT_CLASS_ENTRY(ce_backup_engine, ZEND_NS_NAME("RocksDb", "BackupEngine"), rocksdb_backup_engine_class_methods);
 	rocksdb_backup_engine_ce = zend_register_internal_class(&ce_backup_engine);
+
+  memcpy(&rocksdb_backup_engine_info_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
+  rocksdb_backup_engine_info_handlers.offset = XtOffsetOf(php_rocksdb_backup_engine_info_object, zo);
+  //rocksdb_beckup_engine_info_handlers.free_obj = rocksdb_free_storage;
 	INIT_CLASS_ENTRY(ce_backup_info, ZEND_NS_NAME("RocksDb", "BackupEngineInfo"), rocksdb_backup_engine_info_class_methods);
+  ce_backup_info.create_object = php_rocksdb_backup_engine_info_object_new;
 	rocksdb_backup_engine_info_ce = zend_register_internal_class(&ce_backup_info);
+
 	INIT_CLASS_ENTRY(ce_snapshot, ZEND_NS_NAME("RocksDb", "Snapshot"), rocksdb_snapshot_class_methods);
 	rocksdb_snapshot_ce = zend_register_internal_class(&ce_snapshot);
+
 	INIT_CLASS_ENTRY(ce_write_batch, ZEND_NS_NAME("RocksDb", "WriteBatch"), rocksdb_write_batch_class_methods);
 	rocksdb_write_batch_ce = zend_register_internal_class(&ce_write_batch);
+
+  memcpy(&rocksdb_iterator_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
+  rocksdb_iterator_handlers.offset = XtOffsetOf(php_rocksdb_iterator_object, zo);
+	//rocksdb_iterator_handlers.free_obj = rocksdb_iterator_free_storage;
 	INIT_CLASS_ENTRY(ce_iterator, ZEND_NS_NAME("RocksDb", "Iterator"), rocksdb_iterator_class_methods);
+  ce_iterator.create_object = php_rocksdb_iterator_object_new;
 	rocksdb_iterator_ce = zend_register_internal_class(&ce_iterator);
+
 	zend_class_implements(rocksdb_iterator_ce, 1, spl_ce_SeekableIterator);
 	INIT_CLASS_ENTRY(ce_exception, ZEND_NS_NAME("RocksDb", "Exception"), NULL);
 	rocksdb_exception_ce = zend_register_internal_class_ex(&ce_exception, spl_ce_RuntimeException);

@@ -15,9 +15,9 @@ PHP_SUBST(ROCKSDB_SHARED_LIBADD)
 PHP_NEW_EXTENSION(rocksdb,
     php_rocksdb.c \
     rocksdb.c \
-    rocksdb_backup_engine.c \
     rocksdb_backup_engine_info.c \
     rocksdb_cache.c \
+    rocksdb_backup_engine.c \
     rocksdb_iterator.c \
     rocksdb_snapshot.c \
     rocksdb_write_batch.c \
