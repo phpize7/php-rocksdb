@@ -351,6 +351,7 @@ PHP_METHOD(rocksdb, dropColumnFamily) {
 
   RETURN_TRUE;
 }
+
 PHP_METHOD(rocksdb, put) {
   char *key, *value;
   size_t key_len, value_len;
@@ -403,6 +404,7 @@ PHP_METHOD(rocksdb, putCf) {
 
   RETURN_TRUE;
 }
+
 PHP_METHOD(rocksdb, delete) {
   char *key;
   size_t key_len;
@@ -421,12 +423,13 @@ PHP_METHOD(rocksdb, delete) {
   rocksdb_delete(db_obj->db, options, key, key_len, &err);
   rocksdb_writeoptions_destroy(options);
 
-  if (err != NULL) {
-    RETURN_FALSE;
-  }
+  ROCKSDB_CHECK_FOR_ERRORS(err);
 
   RETURN_TRUE;
 }
+
+
+
 PHP_METHOD(rocksdb, deleteCf) {
   char *key, *cf;
   size_t key_len, cf_len;
@@ -480,6 +483,8 @@ PHP_METHOD(rocksdb, merge) {
 }
 PHP_METHOD(rocksdb, mergeCf) {
 }
+
+
 PHP_METHOD(rocksdb, write) {
   zval *write_batch;
   char *err = NULL;
@@ -502,6 +507,8 @@ PHP_METHOD(rocksdb, write) {
 
   RETURN_TRUE;
 }
+
+
 PHP_METHOD(rocksdb, get) {
   char *key, *value;
   size_t key_len, value_len;
@@ -527,6 +534,8 @@ PHP_METHOD(rocksdb, get) {
   RETVAL_STRINGL(value, value_len);
   free(value);
 }
+
+
 PHP_METHOD(rocksdb, getCf) {
   char *key, *value, *cf;
   size_t key_len, value_len, cf_len;
@@ -558,6 +567,7 @@ PHP_METHOD(rocksdb, getCf) {
   RETVAL_STRINGL(value, value_len);
   free(value);
 }
+
 PHP_METHOD(rocksdb, getIterator) {
   zval *readoptions_zv = NULL;
 
@@ -570,6 +580,8 @@ PHP_METHOD(rocksdb, getIterator) {
   zend_call_method_with_2_params(return_value, rocksdb_iterator_ce,
     &rocksdb_iterator_ce->constructor, "__construct", NULL, getThis(), readoptions_zv TSRMLS_CC);
 }
+
+
 PHP_METHOD(rocksdb, getIteratorCf) {
 
 }
@@ -595,6 +607,10 @@ PHP_METHOD(rocksdb, getProperty) {
   php_rocksdb_db_object *db_obj = Z_ROCKSDB_DB_P(getThis() TSRMLS_CC);
 
   char *value = rocksdb_property_value(db_obj->db, (const char *) prop);
+
+  if (NULL == value) {
+    RETURN_FALSE;
+  }
 
   RETURN_STRING(value);
 }

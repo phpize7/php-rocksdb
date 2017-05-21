@@ -12,7 +12,7 @@
 
 zend_class_entry *rocksdb_iterator_ce;
 
-ZEND_BEGIN_ARG_INFO_EX(rocksdb_class__construct_arginfo, 0, 0, 1)
+ZEND_BEGIN_ARG_INFO_EX(rocksdb_class__construct_arginfo, 0, 0, 2)
 	ZEND_ARG_INFO(0, db)
 	ZEND_ARG_INFO(0, read_options)
 ZEND_END_ARG_INFO()
