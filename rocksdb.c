@@ -18,17 +18,17 @@ zend_class_entry *rocksdb_ce;
 
 ZEND_BEGIN_ARG_INFO_EX(rocksdb_class__construct_arginfo, 0, 0, 1)
   ZEND_ARG_INFO(0, name)
-	ZEND_ARG_INFO(0, options)
-	ZEND_ARG_INFO(0, read_options)
-	ZEND_ARG_INFO(0, write_options)
+  ZEND_ARG_INFO(0, options)
+  ZEND_ARG_INFO(0, read_options)
+  ZEND_ARG_INFO(0, write_options)
   ZEND_ARG_INFO(0, cf_names)
   ZEND_ARG_INFO(0, cf_options)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_list_column_families_arginfo, 0, 0, 3)
-	ZEND_ARG_INFO(0, name)
-	ZEND_ARG_INFO(0, options)
-	ZEND_ARG_INFO(0, lencf)
+  ZEND_ARG_INFO(0, name)
+  ZEND_ARG_INFO(0, options)
+  ZEND_ARG_INFO(0, lencf)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_create_column_family_arginfo, 0, 0, 2)
@@ -160,30 +160,6 @@ const zend_function_entry rocksdb_class_methods[] = {
 	PHP_FE_END
 };
 
-/* {{{ Error Handler
-*/
-static void php_rocksdb_error(php_rocksdb_db_object *db_obj, char *format, ...)
-{
-	va_list arg;
-	char *message;
-
-	va_start(arg, format);
-	vspprintf(&message, 0, format, arg);
-	va_end(arg);
-
-	if (db_obj && db_obj->exception) {
-		zend_throw_exception(zend_ce_exception, message, 0);
-	} else {
-		php_error_docref(NULL, E_WARNING, "%s", message);
-	}
-
-	if (message) {
-		efree(message);
-	}
-}
-
-/* {{{ Constructor
-*/
 PHP_METHOD(rocksdb, __construct) {
   char *name, *err = NULL;
   size_t name_len;
@@ -427,7 +403,6 @@ PHP_METHOD(rocksdb, delete) {
 
   RETURN_TRUE;
 }
-
 
 
 PHP_METHOD(rocksdb, deleteCf) {
