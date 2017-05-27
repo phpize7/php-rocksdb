@@ -58,7 +58,7 @@ PHP_METHOD(rocksdb_backup_engine, __construct) {
 	rocksdb_options_destroy(options);
 
 	if (err != NULL) {
-		zend_throw_exception(zend_ce_exception, err, 0);
+		zend_throw_exception(rocksdb_exception_ce, err, 0);
 		return;
 	}
 }
@@ -75,7 +75,7 @@ PHP_METHOD(rocksdb_backup_engine, purgeOldBackups) {
 	rocksdb_backup_engine_purge_old_backups(this->be, num, &err);
 
 	if (err != NULL) {
-		zend_throw_exception(zend_ce_exception, err, 0);
+		zend_throw_exception(rocksdb_exception_ce, err, 0);
 		return;
 	}
 }
@@ -96,7 +96,7 @@ PHP_METHOD(rocksdb_backup_engine, createNewBackup) {
 	rocksdb_backup_engine_create_new_backup(this->be, rocks->db, &err);
 
 	if (err != NULL) {
-		zend_throw_exception(zend_ce_exception, err, 0);
+		zend_throw_exception(rocksdb_exception_ce, err, 0);
 		return;
 	}
 }
@@ -118,7 +118,7 @@ PHP_METHOD(rocksdb_backup_engine, restoreDbFromLatestBackup) {
 	rocksdb_backup_engine_restore_db_from_latest_backup(this->be, (const char *) db_dir, (const char *) wal_dir, restore_options, &err);
 
 	if (err != NULL) {
-		zend_throw_exception(zend_ce_exception, err, 0);
+		zend_throw_exception(rocksdb_exception_ce, err, 0);
 		return;
 	}
 }

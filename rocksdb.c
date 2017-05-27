@@ -156,7 +156,7 @@ PHP_METHOD(rocksdb, __construct) {
   db_obj = Z_ROCKSDB_DB_P(object);
 
   if (db_obj->initialised == 1) {
-    zend_throw_exception(zend_ce_exception, "Already initialised DB Object", 0);
+    zend_throw_exception(rocksdb_exception_ce, "Already initialised DB Object", 0);
   }
 
   rocksdb_options_t *options = php_rocksdb_get_open_options(options_zv);
@@ -292,7 +292,7 @@ PHP_METHOD(rocksdb, dropColumnFamily) {
   rocksdb_drop_column_family(this->db, this->handles[h], &err);
 
   if (err != NULL) {
-    zend_throw_exception(zend_ce_exception, err, 0);
+    zend_throw_exception(rocksdb_exception_ce, err, 0);
   }
 
   RETURN_TRUE;
@@ -586,7 +586,7 @@ PHP_METHOD(rocksdb, flush) {
   rocksdb_flushoptions_destroy(flushoptions);
 
   if (err != NULL) {
-    zend_throw_exception(zend_ce_exception, err, 0);
+    zend_throw_exception(rocksdb_exception_ce, err, 0);
     return;
   }
 }
@@ -616,7 +616,7 @@ PHP_METHOD(rocksdb, disableFileDeletions) {
   rocksdb_disable_file_deletions(this->db, &err);
 
   if (err != NULL) {
-    zend_throw_exception(zend_ce_exception, err, 0);
+    zend_throw_exception(rocksdb_exception_ce, err, 0);
   }
 }
 PHP_METHOD(rocksdb, enableFileDeletions) {
@@ -631,7 +631,7 @@ PHP_METHOD(rocksdb, enableFileDeletions) {
   rocksdb_enable_file_deletions(this->db, *force_zv, &err);
 
   if (err != NULL) {
-    zend_throw_exception(zend_ce_exception, err, 0);
+    zend_throw_exception(rocksdb_exception_ce, err, 0);
     return;
   }
 }
@@ -668,7 +668,7 @@ PHP_METHOD(rocksdb, repair) {
   rocksdb_repair_db(options, (const char *) name, &err);
 
   if (err != NULL) {
-    zend_throw_exception(zend_ce_exception, err, 0);
+    zend_throw_exception(rocksdb_exception_ce, err, 0);
     return;
   }
 }
