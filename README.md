@@ -4,34 +4,18 @@ The RocksDB library provides a persistent key value store. Keys and values are a
 
 ## Installation
 
+	Clone git@github.com:facebook/rocksdb.git and run make static_lib
+	
+	Upgrade your gcc to version at least 4.8 to get C++11 support.
+	Install gflags. First, try: sudo apt-get install libgflags-dev If this doesn't work and you're using Ubuntu, here's a nice tutorial: (http://askubuntu.com/questions/312173/installing-gflags-12-04)
+	Install snappy. This is usually as easy as: sudo apt-get install libsnappy-dev.
+	Install zlib. Try: sudo apt-get install zlib1g-dev.
+	Install bzip2: sudo apt-get install libbz2-dev.
+	Install zstandard: sudo apt-get install libzstd-dev.
+
 	$ git clone https://github.com/phpize7/php-rocksdb.git
 	$ cd php-rocksdb
 	$ phpize
 	$ ./configure --with-rocksdb
 	$ make
 	$ make install
-
-## Usage
-````php
-<?php
-
-use RocksDb\RocksDb;
-use RocksDb\CompactionFilter;
-use RocksDb\BackupEngine;
-
-$rocks = new RocksDb('/tmp/rocksdb', [
-	'set_compaction_filter' => new class extends CompactionFilter {
-	   	function filter($level, $key, $existingValue, $newValue, $valueChanged) {
-				// do something
-		}
-	}
-]);
-
-$rocks->put('key', 'value);
-$rocks->get('key');
-
-$rocks->getSnapshot(); // => RocksDb\Snapshot
-
-$engine = new BackupEngine();
-$engine->createNewBackup($rocks);
-````
