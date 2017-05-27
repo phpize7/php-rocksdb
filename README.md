@@ -16,6 +16,6 @@ The RocksDB library provides a persistent key value store. Keys and values are a
 	$ git clone https://github.com/phpize7/php-rocksdb.git
 	$ cd php-rocksdb
 	$ phpize
-	$ ./configure --with-rocksdb
+	$ ./configure
 	$ make
 	$ make install
