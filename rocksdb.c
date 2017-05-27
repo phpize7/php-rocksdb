@@ -66,12 +66,6 @@ ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_merge_arginfo, 0, 0, 2)
   ZEND_ARG_INFO(0, value)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_merge_cf_arginfo, 0, 0, 3)
-  ZEND_ARG_INFO(0, key)
-  ZEND_ARG_INFO(0, value)
-  ZEND_ARG_INFO(0, column_family)
-ZEND_END_ARG_INFO()
-
 ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_write_arginfo, 0, 0, 1)
   ZEND_ARG_INFO(0, batch)
 ZEND_END_ARG_INFO()
@@ -85,31 +79,12 @@ ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_get_cf_arginfo, 0, 0, 3)
   ZEND_ARG_INFO(0, column_family)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_get_iterator_cf_arginfo, 0, 0, 1)
-  ZEND_ARG_INFO(0, column_family)
-ZEND_END_ARG_INFO()
-
 ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_get_property_arginfo, 0, 0, 1)
   ZEND_ARG_INFO(0, name)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_get_property_cf_arginfo, 0, 0, 2)
   ZEND_ARG_INFO(0, name)
-  ZEND_ARG_INFO(0, column_family)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_get_approximate_sizes_arginfo, 0, 0, 4)
-  ZEND_ARG_INFO(0, num_ranges)
-  ZEND_ARG_INFO(0, start_key)
-  ZEND_ARG_INFO(0, limit_key)
-  ZEND_ARG_INFO(0, sizes)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO_EX(rocksdb_class_get_approximate_sizes_cf_arginfo, 0, 0, 5)
-  ZEND_ARG_INFO(0, num_ranges)
-  ZEND_ARG_INFO(0, start_key)
-  ZEND_ARG_INFO(0, limit_key)
-  ZEND_ARG_INFO(0, sizes)
   ZEND_ARG_INFO(0, column_family)
 ZEND_END_ARG_INFO()
 
@@ -139,17 +114,13 @@ const zend_function_entry rocksdb_class_methods[] = {
   PHP_ME(rocksdb, delete, rocksdb_class_delete_arginfo, ZEND_ACC_PUBLIC)
   PHP_ME(rocksdb, deleteCf, rocksdb_class_delete_cf_arginfo, ZEND_ACC_PUBLIC)
   PHP_ME(rocksdb, merge, rocksdb_class_merge_arginfo, ZEND_ACC_PUBLIC)
-  PHP_ME(rocksdb, mergeCf, rocksdb_class_merge_cf_arginfo, ZEND_ACC_PUBLIC)
   PHP_ME(rocksdb, write, rocksdb_class_write_arginfo, ZEND_ACC_PUBLIC)
   PHP_ME(rocksdb, get, rocksdb_class_get_arginfo, ZEND_ACC_PUBLIC)
   PHP_ME(rocksdb, getCf, rocksdb_class_get_cf_arginfo, ZEND_ACC_PUBLIC)
   PHP_ME(rocksdb, getIterator, NULL, ZEND_ACC_PUBLIC) // rocksdb_create_iterator
-  PHP_ME(rocksdb, getIteratorCf, rocksdb_class_get_iterator_cf_arginfo, ZEND_ACC_PUBLIC) // rocksdb_create_iterator_cf
   PHP_ME(rocksdb, createSnapshot, NULL, ZEND_ACC_PUBLIC)
   PHP_ME(rocksdb, getProperty, rocksdb_class_get_property_arginfo, ZEND_ACC_PUBLIC)
   PHP_ME(rocksdb, getPropertyCf, rocksdb_class_get_property_cf_arginfo, ZEND_ACC_PUBLIC)
-  PHP_ME(rocksdb, getApproximateSizes, rocksdb_class_get_approximate_sizes_arginfo, ZEND_ACC_PUBLIC)
-  PHP_ME(rocksdb, getApproximateSizesCf, rocksdb_class_get_approximate_sizes_cf_arginfo, ZEND_ACC_PUBLIC)
   PHP_ME(rocksdb, flush, rocksdb_class_flush_arginfo, ZEND_ACC_PUBLIC)
   PHP_ME(rocksdb, deleteFile, rocksdb_class_delete_file_arginfo, ZEND_ACC_PUBLIC)
   PHP_ME(rocksdb, disableFileDeletions, NULL, ZEND_ACC_PUBLIC)
@@ -241,7 +212,6 @@ PHP_METHOD(rocksdb, __construct) {
   db_obj->name = name;
   db_obj->initialised = 1;
 }
-
 PHP_METHOD(rocksdb, listColumnFamilies) {
   char *err, *cf = NULL;
   const char *name;
@@ -327,7 +297,6 @@ PHP_METHOD(rocksdb, dropColumnFamily) {
 
   RETURN_TRUE;
 }
-
 PHP_METHOD(rocksdb, put) {
   char *key, *value;
   size_t key_len, value_len;
@@ -350,7 +319,6 @@ PHP_METHOD(rocksdb, put) {
 
   RETURN_TRUE;
 }
-
 PHP_METHOD(rocksdb, putCf) {
   char *key, *value, *cf;
   size_t key_len, value_len, cf_len;
@@ -380,7 +348,6 @@ PHP_METHOD(rocksdb, putCf) {
 
   RETURN_TRUE;
 }
-
 PHP_METHOD(rocksdb, delete) {
   char *key;
   size_t key_len;
@@ -403,8 +370,6 @@ PHP_METHOD(rocksdb, delete) {
 
   RETURN_TRUE;
 }
-
-
 PHP_METHOD(rocksdb, deleteCf) {
   char *key, *cf;
   size_t key_len, cf_len;
@@ -456,10 +421,6 @@ PHP_METHOD(rocksdb, merge) {
 
   RETURN_TRUE;
 }
-PHP_METHOD(rocksdb, mergeCf) {
-}
-
-
 PHP_METHOD(rocksdb, write) {
   zval *write_batch;
   char *err = NULL;
@@ -482,8 +443,6 @@ PHP_METHOD(rocksdb, write) {
 
   RETURN_TRUE;
 }
-
-
 PHP_METHOD(rocksdb, get) {
   char *key, *value;
   size_t key_len, value_len;
@@ -509,8 +468,6 @@ PHP_METHOD(rocksdb, get) {
   RETVAL_STRINGL(value, value_len);
   free(value);
 }
-
-
 PHP_METHOD(rocksdb, getCf) {
   char *key, *value, *cf;
   size_t key_len, value_len, cf_len;
@@ -552,13 +509,13 @@ PHP_METHOD(rocksdb, getIterator) {
 
 	object_init_ex(return_value, rocksdb_iterator_ce);
 
-  zend_call_method_with_2_params(return_value, rocksdb_iterator_ce,
-    &rocksdb_iterator_ce->constructor, "__construct", NULL, getThis(), readoptions_zv TSRMLS_CC);
-}
-
-
-PHP_METHOD(rocksdb, getIteratorCf) {
-
+  if (!readoptions_zv) {
+    zend_call_method_with_1_params(return_value, rocksdb_iterator_ce,
+      &rocksdb_iterator_ce->constructor, "__construct", NULL, getThis());
+  } else {
+    zend_call_method_with_2_params(return_value, rocksdb_iterator_ce,
+      &rocksdb_iterator_ce->constructor, "__construct", NULL, getThis(), readoptions_zv TSRMLS_CC);
+  }
 }
 PHP_METHOD(rocksdb, createSnapshot) {
   if (zend_parse_parameters_none() == FAILURE) {
@@ -612,10 +569,6 @@ PHP_METHOD(rocksdb, getPropertyCf) {
 
   RETURN_STRING(value);
 }
-PHP_METHOD(rocksdb, getApproximateSizes) {
-
-}
-PHP_METHOD(rocksdb, getApproximateSizesCf) {}
 PHP_METHOD(rocksdb, flush) {
   zval *flushoptions_zv = NULL;
   rocksdb_flushoptions_t *flushoptions;

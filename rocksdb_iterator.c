@@ -48,7 +48,7 @@ PHP_METHOD(rocksdb_iterator, __construct) {
 	intern = Z_ROCKSDB_ITERATOR_P(getThis() TSRMLS_CC);
 	db_obj = Z_ROCKSDB_DB_P(db_zv);
 
-	readoptions = rocksdb_readoptions_create();
+	readoptions = php_rocksdb_get_read_options(readoptions_zv);
 	intern->iterator = rocksdb_create_iterator(db_obj->db, readoptions);
 	rocksdb_readoptions_destroy(readoptions);
 
