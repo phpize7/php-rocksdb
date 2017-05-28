@@ -510,7 +510,6 @@ PHP_METHOD(rocksdb, getCf) {
   RETVAL_STRINGL(value, value_len);
   free(value);
 }
-
 PHP_METHOD(rocksdb, getIterator) {
   zval *readoptions_zv = NULL;
 
