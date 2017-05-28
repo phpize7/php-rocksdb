@@ -19,3 +19,6 @@ The RocksDB library provides a persistent key value store. Keys and values are a
 	$ ./configure
 	$ make
 	$ make install
+
+# Usage
+	See tests
