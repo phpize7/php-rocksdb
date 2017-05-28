@@ -231,6 +231,8 @@ PHP_METHOD(rocksdb, listColumnFamilies) {
   column_families = rocksdb_list_column_families(options, name, &lencf, &err);
   rocksdb_options_destroy(options);
 
+  ROCKSDB_CHECK_FOR_ERRORS(err);
+
   HashTable *ht;
   ALLOC_HASHTABLE(ht);
   zend_hash_init(ht, 0, NULL, ZVAL_PTR_DTOR, 0);
@@ -266,7 +268,10 @@ PHP_METHOD(rocksdb, createColumnFamily) {
   db_obj->handles[db_obj->num_handles] = rocksdb_create_column_family(db_obj->db, (const rocksdb_options_t *) options, name, &err);
   db_obj->handle_names[db_obj->num_handles] = (char *) name;
   db_obj->num_handles++;
+
   rocksdb_options_destroy(options);
+
+  ROCKSDB_CHECK_FOR_ERRORS(err);
 
   RETURN_TRUE;
 }
@@ -291,9 +296,7 @@ PHP_METHOD(rocksdb, dropColumnFamily) {
 
   rocksdb_drop_column_family(this->db, this->handles[h], &err);
 
-  if (err != NULL) {
-    zend_throw_exception(rocksdb_exception_ce, err, 0);
-  }
+  ROCKSDB_CHECK_FOR_ERRORS(err);
 
   RETURN_TRUE;
 }
@@ -346,6 +349,8 @@ PHP_METHOD(rocksdb, putCf) {
   rocksdb_put_cf(db_obj->db, writeoptions, db_obj->handles[h], key, key_len, value, value_len, &err);
   rocksdb_writeoptions_destroy(writeoptions);
 
+  ROCKSDB_CHECK_FOR_ERRORS(err);
+
   RETURN_TRUE;
 }
 PHP_METHOD(rocksdb, delete) {
@@ -396,9 +401,7 @@ PHP_METHOD(rocksdb, deleteCf) {
   rocksdb_delete_cf(db_obj->db, options, db_obj->handles[h], key, key_len, &err);
   rocksdb_writeoptions_destroy(options);
 
-  if (err != NULL) {
-    RETURN_FALSE;
-  }
+  ROCKSDB_CHECK_FOR_ERRORS(err);
 
   RETURN_TRUE;
 }
@@ -418,6 +421,8 @@ PHP_METHOD(rocksdb, merge) {
   rocksdb_writeoptions_t *options = php_rocksdb_get_write_options(options_zv);
   rocksdb_merge(db_obj->db, options, (const char *) key, key_len, (const char *) value, value_len, &err);
   rocksdb_writeoptions_destroy(options);
+
+  ROCKSDB_CHECK_FOR_ERRORS(err);
 
   RETURN_TRUE;
 }
@@ -441,6 +446,8 @@ PHP_METHOD(rocksdb, write) {
   rocksdb_write(db_obj->db, options, write_batch_object->batch, &err);
   rocksdb_writeoptions_destroy(options);
 
+  ROCKSDB_CHECK_FOR_ERRORS(err);
+
   RETURN_TRUE;
 }
 PHP_METHOD(rocksdb, get) {
@@ -460,6 +467,8 @@ PHP_METHOD(rocksdb, get) {
   rocksdb_readoptions_t *options = php_rocksdb_get_read_options(options_zv);
   value = rocksdb_get(db_obj->db, options, key, key_len, &value_len, &err);
   rocksdb_readoptions_destroy(options);
+
+  ROCKSDB_CHECK_FOR_ERRORS(err);
 
   if (value == NULL) {
     RETURN_FALSE;
@@ -491,6 +500,8 @@ PHP_METHOD(rocksdb, getCf) {
   rocksdb_readoptions_t *options = php_rocksdb_get_read_options(options_zv);
   value = rocksdb_get_cf(this->db, options, this->handles[h], key, key_len, &value_len, &err);
   rocksdb_readoptions_destroy(options);
+
+  ROCKSDB_CHECK_FOR_ERRORS(err);
 
   if (value == NULL) {
     RETURN_FALSE;
@@ -585,10 +596,7 @@ PHP_METHOD(rocksdb, flush) {
   rocksdb_flush(this->db, flushoptions, &err);
   rocksdb_flushoptions_destroy(flushoptions);
 
-  if (err != NULL) {
-    zend_throw_exception(rocksdb_exception_ce, err, 0);
-    return;
-  }
+  ROCKSDB_CHECK_FOR_ERRORS(err);
 }
 PHP_METHOD(rocksdb, deleteFile) {
   char *name;
@@ -615,9 +623,7 @@ PHP_METHOD(rocksdb, disableFileDeletions) {
 
   rocksdb_disable_file_deletions(this->db, &err);
 
-  if (err != NULL) {
-    zend_throw_exception(rocksdb_exception_ce, err, 0);
-  }
+  ROCKSDB_CHECK_FOR_ERRORS(err);
 }
 PHP_METHOD(rocksdb, enableFileDeletions) {
   char *err = NULL;
@@ -630,10 +636,7 @@ PHP_METHOD(rocksdb, enableFileDeletions) {
 
   rocksdb_enable_file_deletions(this->db, *force_zv, &err);
 
-  if (err != NULL) {
-    zend_throw_exception(rocksdb_exception_ce, err, 0);
-    return;
-  }
+  ROCKSDB_CHECK_FOR_ERRORS(err);
 }
 PHP_METHOD(rocksdb, destroy) {
   char *err = NULL;
@@ -648,6 +651,8 @@ PHP_METHOD(rocksdb, destroy) {
   rocksdb_options_t *options = php_rocksdb_get_open_options(options_zv);
   rocksdb_destroy_db(options, this->name, &err);
   rocksdb_options_destroy(options);
+
+  ROCKSDB_CHECK_FOR_ERRORS(err);
 
   RETURN_TRUE;
 }
@@ -667,10 +672,7 @@ PHP_METHOD(rocksdb, repair) {
   options = php_rocksdb_get_open_options(options_zv);
   rocksdb_repair_db(options, (const char *) name, &err);
 
-  if (err != NULL) {
-    zend_throw_exception(rocksdb_exception_ce, err, 0);
-    return;
-  }
+  ROCKSDB_CHECK_FOR_ERRORS(err);
 }
 PHP_METHOD(rocksdb, close) {
   php_rocksdb_db_object *this;

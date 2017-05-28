@@ -26,17 +26,11 @@ ZEND_BEGIN_ARG_INFO_EX(rocksdb_write_batch_class_delete_arginfo, 0, 0, 1)
 	ZEND_ARG_INFO(0, key)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(rocksdb_write_batch_class_delete_cf_arginfo, 0, 0, 2)
-	ZEND_ARG_INFO(0, cf)
-	ZEND_ARG_INFO(0, key)
-ZEND_END_ARG_INFO()
-
 const zend_function_entry rocksdb_write_batch_class_methods[] = {
 	PHP_ME(rocksdb_write_batch, __construct, NULL,  ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
 	PHP_ME(rocksdb_write_batch, put, rocksdb_write_batch_class_put_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(rocksdb_write_batch, merge, rocksdb_write_batch_class_merge_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(rocksdb_write_batch, delete, rocksdb_write_batch_class_delete_arginfo, ZEND_ACC_PUBLIC)
-	PHP_ME(rocksdb_write_batch, deleteCf, rocksdb_write_batch_class_delete_cf_arginfo, ZEND_ACC_PUBLIC)
 	PHP_ME(rocksdb_write_batch, data, NULL, ZEND_ACC_PUBLIC)
 	PHP_ME(rocksdb_write_batch, clear, NULL, ZEND_ACC_PUBLIC)
 	PHP_ME(rocksdb_write_batch, destroy, NULL, ZEND_ACC_PUBLIC)
@@ -101,7 +95,6 @@ PHP_METHOD(rocksdb_write_batch, delete) {
 	this = Z_ROCKSDB_WRITE_BATCH_P(getThis() TSRMLS_CC);
 	rocksdb_writebatch_delete(this->batch, key, key_len);
 }
-PHP_METHOD(rocksdb_write_batch, deleteCf) {}
 PHP_METHOD(rocksdb_write_batch, data) {
 	const char *value;
 	size_t *size, size_len;
